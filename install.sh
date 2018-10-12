@@ -1,2 +1,2 @@
-chomd +x agt
+chmod +x agt
 ln -s `pwd`/agt /usr/local/bin

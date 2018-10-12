@@ -1,7 +1,7 @@
 ## Installation
 You need Install ruby environment before use this program.
 
-in OS X ```$git clone git@github.com:tinyfeng/git-branch-manager.git && source git-branch-manager/install.sh ```sh
+in OS X `$git clone git@github.com:tinyfeng/git-branch-manager.git && source git-branch-manager/install.sh`
 
 
 ## Usage
@@ -14,11 +14,3 @@ Delete a branch existed: `$agt -d branch-name`
 
 Swich branch existed by number in list: `$agt -s number`
 
-
-After make a alias, You can use
-
-`agt branch_name branch_massage` to swich a new or old branch, and addictive branch massage or reset it.
-
-`agt -l` to list existed branch and it's massage.
-
-`agt -d branch_name` to delete a existed branch.
