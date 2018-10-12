@@ -14,6 +14,12 @@ end.parse!
 conf_file = File.open(FILE_PATH)
 $git_conf = JSON.parse(conf_file.read) || {}
 REPO_NAME = `basename \`git rev-parse --show-toplevel\``.strip
+def fix_config
+  ($git_conf[REPO_NAME] || {}).each do |k, v|
+    $git_conf[REPO_NAME].delete(k) unless v
+  end
+  write_file
+end
 
 def write_conf branch_name, message
   return if message.strip.empty?
@@ -47,9 +53,8 @@ def list_branch
 end
 
 def delete_conf num
-  delete_branch = $git_conf[REPO_NAME].to_a[num.to_i][0]
-  `git branch -D #{delete_branch}`
-  $git_conf[REPO_NAME].delete delete_branch
+  delete_branch = $git_conf[REPO_NAME].to_a[num.to_i - 1][0]
+  system("git branch -D #{delete_branch}") && $git_conf[REPO_NAME].delete(delete_branch)
   write_file
 end
 
@@ -59,10 +64,11 @@ def switch_branch branch_name, message = ''
 end
 
 def swich_branch_by_num num
-  system("git checkout #{$git_conf[REPO_NAME].to_a[num.to_i][0]}")
+  system("git checkout #{$git_conf[REPO_NAME].to_a[num.to_i - 1][0]}")
 end
 
+fix_config
 list_branch if options[:list]
 delete_conf options[:del_branch] if options[:del_branch]
 swich_branch_by_num options[:swich] if options[:swich]
-switch_branch ARGV[0], ARGV[1] if ARGV[0]
+(ARGV[1] ? switch_branch(ARGV[0], ARGV[1]): puts("need branch comment")) if ARGV[0]
