@@ -6,7 +6,7 @@ in OS X `$git clone git@github.com:tinyfeng/git-branch-manager.git && source git
 
 ## Usage
 
-Swich a branch existed or new branch with conment, reset branch's comment: `$agt branch-name -m "branch comment"`
+Swich a branch existed or new branch with conment, reset branch's comment: `$agt branch-name "branch comment"`
 
 List all branch record and message: `$agt -l`
 
