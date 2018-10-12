@@ -1,14 +1,19 @@
-## Usage
-
+## Installation
 You need Install ruby environment before use this program.
 
-You can make a alias to run this program.
+in OS X ```$git clone git@github.com:tinyfeng/git-branch-manager.git && source git-branch-manager/install.sh ```sh
 
-Such as add the follow line to your ~/.bash_profile
 
-`alias agt="ruby path/file_name.rb"`
+## Usage
 
-## Command Line
+Swich a branch existed or new branch with conment, reset branch's comment: `$agt branch-name -m "branch comment"`
+
+List all branch record and message: `$agt -l`
+
+Delete a branch existed: `$agt -d branch-name`
+
+Swich branch existed by number in list: `$agt -s number`
+
 
 After make a alias, You can use
 

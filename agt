@@ -7,7 +7,7 @@ OptionParser.new do |opts|
   opts.banner = "Usage: example.rb [options]"
   opts.on("-l", "--[no-]list", "list branchs") { |l| options[:list] = l }
   opts.on("-d", "--del_branch=DEL_BRANCH", "delete branch name") { |d| options[:del_branch] = d }
-  opts.on("-s", "--swich", "swich branch") { |s| options[:swich] = s }
+  opts.on("-s", "--swich=WHICH_BRANCH", "swich branch") { |s| options[:swich] = s }
 end.parse!
 
 `echo {} >> /usr/local/etc/git_branch.conf` unless File.file? '/usr/local/etc/git_branch.conf'
@@ -34,7 +34,7 @@ def list_branch
     next unless v
     if v.is_a? String
       count += 1
-      puts "#{count}:  #{k}:  #{v}" 
+      puts "#{count}  #{k}:  #{v}" 
     else
       config_with_time.merge! k => v
     end
@@ -42,13 +42,14 @@ def list_branch
   puts "\ntime --- branch: message\n\n"
   config_with_time.each do |k, v|
     count += 1
-    puts "#{count}:  #{v[0]} --- #{k}:  #{v[1]}"
+    puts "#{count}  #{v[0]} --- #{k}:  #{v[1]}"
   end
 end
 
-def delete_conf key
-  `git branch -D #{key}`
-  $git_conf[REPO_NAME].delete key
+def delete_conf num
+  delete_branch = $git_conf[REPO_NAME].to_a[num.to_i][0]
+  `git branch -D #{delete_branch}`
+  $git_conf[REPO_NAME].delete delete_branch
   write_file
 end
 
@@ -63,8 +64,5 @@ end
 
 list_branch if options[:list]
 delete_conf options[:del_branch] if options[:del_branch]
-if options[:swich]
-  swich_branch_by_num ARGV[0]
-else
-  switch_branch ARGV[0], ARGV[1] if ARGV[0]
-end
+swich_branch_by_num options[:swich] if options[:swich]
+switch_branch ARGV[0], ARGV[1] if ARGV[0]
