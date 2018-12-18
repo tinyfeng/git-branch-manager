@@ -76,8 +76,8 @@ if ARGV[0]
   if !main_keys.include?(ARGV[0])
     (ARGV[1] ? switch_branch(ARGV[0], ARGV[1]): puts("need branch comment"))
   elsif ARGV[0] == 'ps'
-    current_branch_name = system 'git rev-parse --abbrev-ref HEAD'
-    message = system "git push  --set-upstream origin #{current_branch_name}"
+    current_branch_name = `git rev-parse --abbrev-ref HEAD`.chomp
+    message = `git push  --set-upstream origin #{current_branch_name}`.chomp
     system ("open #{message.split("\n").select{|i| i.include? 'http'}.first.split(' ').second}")
   end
 end
