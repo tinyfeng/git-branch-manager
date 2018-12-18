@@ -79,6 +79,7 @@ if ARGV[0]
   elsif ARGV[0] == 'ps'
     current_branch_name = `git rev-parse --abbrev-ref HEAD`.chomp
     message = Open3.capture3("git push  --set-upstream origin #{current_branch_name}")[1]
-    system ("open #{message.split("\n")&.select{|i| i.include? 'http'}&.first&.split(' ')&.[](1)}")
+    url = message.split("\n")&.select{|i| i.include? 'http'}&.first&.split(' ')&.[](1)
+    system ("open #{url}") if url
   end
 end
