@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'json'
 require 'optparse'
+main_keys = %w(ps)
 options = {}
 FILE_PATH = '/usr/local/etc/git_branch.conf'
 OptionParser.new do |opts|
@@ -71,4 +72,12 @@ fix_config
 list_branch if options[:list]
 delete_conf options[:del_branch] if options[:del_branch]
 swich_branch_by_num options[:swich] if options[:swich]
-(ARGV[1] ? switch_branch(ARGV[0], ARGV[1]): puts("need branch comment")) if ARGV[0]
+if ARGV[0] 
+  if !main_keys.include?(ARGV[0])
+    (ARGV[1] ? switch_branch(ARGV[0], ARGV[1]): puts("need branch comment"))
+  elsif ARGV[0] == 'ps'
+    current_branch_name = system 'git rev-parse --abbrev-ref HEAD'
+    message = system "git push  --set-upstream origin #{current_branch_name}"
+    system ("open #{message.split("\n").select{|i| i.include? 'http'}.first.split(' ').second}")
+  end
+end
