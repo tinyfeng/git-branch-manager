@@ -1,7 +1,7 @@
 ## Installation
 You need Install ruby environment before use this program.
 
-in OS X `$git clone git@github.com:tinyfeng/git-branch-manager.git && source git-branch-manager/install.sh`
+in OS X `$git clone https://github.com/tinyfeng/git-branch-manager.git ~/agt && source ~/agt/install.sh`
 
 
 ## Usage
