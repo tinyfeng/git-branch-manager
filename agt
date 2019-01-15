@@ -4,7 +4,8 @@ require 'optparse'
 require 'open3'
 main_keys = %w(ps)
 options = {}
-FILE_PATH = '/usr/local/etc/git_branch.conf'
+HOME_PAHT = `eval echo "~$different_user"`.chomp
+FILE_PATH = "#{HOME_PAHT}/git_branch.conf"
 OptionParser.new do |opts|
   opts.banner = "Usage: example.rb [options]"
   opts.on("-l", "--[no-]list", "list branchs") { |l| options[:list] = l }
@@ -12,7 +13,7 @@ OptionParser.new do |opts|
   opts.on("-s", "--swich=WHICH_BRANCH", "swich branch") { |s| options[:swich] = s }
 end.parse!
 
-`echo {} >> /usr/local/etc/git_branch.conf` unless File.file? '/usr/local/etc/git_branch.conf'
+`echo {} >> #{FILE_PATH}` unless File.file? FILE_PATH
 conf_file = File.open(FILE_PATH)
 $git_conf = JSON.parse(conf_file.read) || {}
 REPO_NAME = `basename \`git rev-parse --show-toplevel\``.strip
