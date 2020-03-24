@@ -83,7 +83,6 @@ if ARGV[0]
     url = message.split("\n")&.select{|i| i.include? 'http'}&.first&.split(' ')&.[](1)
     system ("open #{url}") if url
   elsif ARGV[0] == 'lst'
-    puts 'lst'
     last_branch_name = $git_conf[REPO_NAME].to_a.last&.first&.to_s
     puts '无记录的分支' unless last_branch_name || last_branch_name.empty?
     system "git checkout #{last_branch_name}"
