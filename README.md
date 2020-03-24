@@ -14,3 +14,4 @@ Delete a branch existed: `$agt -d branch-name`
 
 Swich branch existed by number in list: `$agt -s number`
 
+Swich latest branch: `$agt lst`
