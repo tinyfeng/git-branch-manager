@@ -2,10 +2,10 @@
 require 'json'
 require 'optparse'
 require 'open3'
-main_keys = %w(ps)
+main_keys = %w(ps lst)
 options = {}
-HOME_PAHT = `eval echo "~$different_user"`.chomp
-FILE_PATH = "#{HOME_PAHT}/git_branch.conf"
+HOME_PATH = `eval echo "~$different_user"`.chomp
+FILE_PATH = "#{HOME_PATH}/git_branch.conf"
 OptionParser.new do |opts|
   opts.banner = "Usage: example.rb [options]"
   opts.on("-l", "--[no-]list", "list branchs") { |l| options[:list] = l }
@@ -25,7 +25,7 @@ def fix_config
 end
 
 def write_conf branch_name, message
-  return if message.strip.empty?
+  message ||= ''
   config = [Time.now.strftime("%Y.%m.%d"), message]
   $git_conf[REPO_NAME] = ($git_conf[REPO_NAME] || {}).merge!({ branch_name => config })
   write_file
@@ -36,7 +36,7 @@ def write_file
 end
 
 def list_branch
-  puts "branch: message\n\n"
+  # puts "branch: message\n\n"
   config_with_time = {} # 后续加的分支时间，为了兼容
   count = 0
   ($git_conf[REPO_NAME] || {}).each do |k, v|
@@ -48,7 +48,7 @@ def list_branch
       config_with_time.merge! k => v
     end
   end
-  puts "\ntime --- branch: message\n\n"
+  puts "time --- branch: message\n\n"
   config_with_time.each do |k, v|
     count += 1
     puts "#{count}  #{v[0]} --- #{k}:  #{v[1]}"
@@ -76,11 +76,16 @@ delete_conf options[:del_branch] if options[:del_branch]
 swich_branch_by_num options[:swich] if options[:swich]
 if ARGV[0] 
   if !main_keys.include?(ARGV[0])
-    (ARGV[1] ? switch_branch(ARGV[0], ARGV[1]): puts("need branch comment"))
+     switch_branch ARGV[0], (ARGV[1] || '')
   elsif ARGV[0] == 'ps'
     current_branch_name = `git rev-parse --abbrev-ref HEAD`.chomp
     message = Open3.capture3("git push  --set-upstream origin #{current_branch_name}")[1]
     url = message.split("\n")&.select{|i| i.include? 'http'}&.first&.split(' ')&.[](1)
     system ("open #{url}") if url
+  elsif ARGV[0] == 'lst'
+    puts 'lst'
+    last_branch_name = $git_conf[REPO_NAME].to_a.last&.first&.to_s
+    puts '无记录的分支' unless last_branch_name || last_branch_name.empty?
+    system "git checkout #{last_branch_name}"
   end
 end
